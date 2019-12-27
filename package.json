@@ -1,0 +1,16 @@
+{
+  "name": "bag",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Ethan Kent <ethan.kent@amount.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest --passWithNoTests --coverage"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.7.7",
+    "@types/jest": "^24.0.25",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.2.0"
+  }
+}
