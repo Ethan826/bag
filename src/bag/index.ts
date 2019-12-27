@@ -1,8 +1,7 @@
 import "../Hashable/String"; // Our extended string
 import BagEntry from "./BagEntry";
 import Hashable from "../Hashable";
-
-// TODO: Extract class hashtable
+import Bucket from "./Bucket";
 
 /**
  * Represents a bag, also known as a multiset. Insertion order is not
@@ -14,7 +13,7 @@ import Hashable from "../Hashable";
  */
 export default class Bag<T extends Hashable> {
   private numElements: number;
-  private hashTable: Array<Array<BagEntry<T>>>;
+  private hashTable: Array<Bucket<T>>;
 
   /**
    * Creates an instance of Bag.
@@ -24,7 +23,7 @@ export default class Bag<T extends Hashable> {
    * @memberof Bag
    */
   constructor(private numBuckets = 100) {
-    this.hashTable = [...Array(numBuckets)].map(_ => []);
+    this.hashTable = [...Array(numBuckets)].map(_ => new Bucket());
     this.numElements = 0;
   }
 
@@ -37,10 +36,7 @@ export default class Bag<T extends Hashable> {
   public insert(value: T) {
     ++this.numElements;
     const bucketContents = this.bucketCorrespondingToValue(value);
-    const entryIndex = bucketContents.findIndex(entry => entry.isEqual(value));
-    entryIndex !== -1
-      ? bucketContents[entryIndex].increment()
-      : bucketContents.push(new BagEntry(value));
+    bucketContents.insert(value);
   }
 
   /**
@@ -53,8 +49,7 @@ export default class Bag<T extends Hashable> {
    */
   public contains(value: T): boolean {
     const bucketContents = this.bucketCorrespondingToValue(value);
-    const entryIndex = bucketContents.findIndex(entry => entry.isEqual(value));
-    return entryIndex !== -1;
+    return bucketContents.contains(value);
   }
 
   /**
@@ -69,19 +64,8 @@ export default class Bag<T extends Hashable> {
    */
   public delete(value: T): boolean {
     const bucketContents = this.bucketCorrespondingToValue(value);
-    const entryIndex = this.findEntryIndex(value, bucketContents);
-
-    // Is the element present?
-    if (entryIndex !== null) {
-      // If so, is there more than one?
-      if (bucketContents[entryIndex].count() > 1) {
-        // If more than one, just decrement the number.
-        bucketContents[entryIndex].decrement();
-      } else {
-        // If only one, remove it from the array.
-        bucketContents.splice(entryIndex, 1);
-      }
-
+    if (bucketContents.delete(value)) {
+      --this.numElements;
       return true;
     } else {
       return false;
@@ -99,13 +83,13 @@ export default class Bag<T extends Hashable> {
    */
   public deleteAll(value: T): boolean {
     const bucketContents = this.bucketCorrespondingToValue(value);
-    const entryIndex = this.findEntryIndex(value, bucketContents);
+    const howManyOccurrences: number = bucketContents.deleteAll(value);
 
-    if (entryIndex !== null) {
-      bucketContents.splice(entryIndex, 1);
-      return true;
-    } else {
+    if (howManyOccurrences === 0) {
       return false;
+    } else {
+      this.numElements -= howManyOccurrences;
+      return true;
     }
   }
 
@@ -117,9 +101,7 @@ export default class Bag<T extends Hashable> {
    * @memberof Bag
    */
   public count(value: T): number {
-    const bucketContents = this.bucketCorrespondingToValue(value);
-    const entryIndex = bucketContents.findIndex(entry => entry.isEqual(value));
-    return entryIndex !== -1 ? bucketContents[entryIndex].count() : 0;
+    return this.bucketCorrespondingToValue(value).count(value);
   }
 
   /**
@@ -192,48 +174,7 @@ export default class Bag<T extends Hashable> {
     return indexOrNegative1 === -1 ? null : indexOrNegative1;
   }
 
-  private bucketCorrespondingToValue(value: T): Array<BagEntry<T>> {
+  private bucketCorrespondingToValue(value: T): Bucket<T> {
     return this.hashTable[this.computeBucket(value)];
   }
 }
-
-const myBag = new Bag<String>();
-
-myBag.insert("Honda Pilot");
-myBag.insert("Honda Fit");
-myBag.insert("Honda Pilot");
-
-console.log(myBag.count("Honda Pilot"));
-console.log(myBag.count("Honda Fit"));
-console.log(myBag.count("Yugo"));
-
-console.log(myBag.toArray());
-
-// [
-//   "a",
-//   "b",
-//   "c",
-//   "d",
-//   "e",
-//   "f",
-//   "g",
-//   "h",
-//   "i",
-//   "j",
-//   "k",
-//   "l",
-//   "m",
-//   "n",
-//   "o",
-//   "p",
-//   "q",
-//   "r",
-//   "s",
-//   "t",
-//   "u",
-//   "v",
-//   "w",
-//   "x",
-//   "y",
-//   "z",
-// ]

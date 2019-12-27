@@ -46,6 +46,14 @@ describe("Bag", () => {
         const subject = new Bag();
         expect(subject.delete(insertedValue)).toBe(false);
       });
+
+      it("alters the length by the expected amount", () => {
+        const subject = new Bag();
+        subject.insert(insertedValue);
+        subject.insert(insertedValue);
+        subject.delete(insertedValue);
+        expect(subject.length()).toBe(1);
+      });
     });
 
     describe("deleteAll()", () => {
@@ -56,7 +64,7 @@ describe("Bag", () => {
         expect(subject.contains(insertedValue)).toBe(false);
       });
 
-      it("deletes exactly one occurrence", () => {
+      it("deletes all occurrences", () => {
         const subject = new Bag();
         subject.insert(insertedValue);
         subject.insert(insertedValue);
@@ -73,6 +81,14 @@ describe("Bag", () => {
       it("returns false if the item wasn't found", () => {
         const subject = new Bag();
         expect(subject.deleteAll(insertedValue)).toBe(false);
+      });
+
+      it("alters the length by the expected amount", () => {
+        const subject = new Bag();
+        subject.insert(insertedValue);
+        subject.insert(insertedValue);
+        subject.deleteAll(insertedValue);
+        expect(subject.length()).toBe(0);
       });
     });
   });
