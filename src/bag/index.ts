@@ -2,7 +2,7 @@ import "../Hashable/String"; // Our extended string
 import BagEntry from "./BagEntry";
 import Hashable from "../Hashable";
 
-// TODO: We want to inject the hashcode handling
+// TODO: Extract class hashtable
 
 /**
  * Represents a bag, also known as a multiset. Insertion order is not

@@ -35,6 +35,17 @@ describe("Bag", () => {
         subject.delete(insertedValue);
         expect(subject.count(insertedValue)).toBe(1);
       });
+
+      it("returns true if the item was found", () => {
+        const subject = new Bag();
+        subject.insert(insertedValue);
+        expect(subject.delete(insertedValue)).toBe(true);
+      });
+
+      it("returns false if the item wasn't found", () => {
+        const subject = new Bag();
+        expect(subject.delete(insertedValue)).toBe(false);
+      });
     });
 
     describe("deleteAll()", () => {
@@ -51,6 +62,17 @@ describe("Bag", () => {
         subject.insert(insertedValue);
         subject.deleteAll(insertedValue);
         expect(subject.contains(insertedValue)).toBe(false);
+      });
+
+      it("returns true if the item was found", () => {
+        const subject = new Bag();
+        subject.insert(insertedValue);
+        expect(subject.deleteAll(insertedValue)).toBe(true);
+      });
+
+      it("returns false if the item wasn't found", () => {
+        const subject = new Bag();
+        expect(subject.deleteAll(insertedValue)).toBe(false);
       });
     });
   });
@@ -100,5 +122,45 @@ describe("Bag", () => {
     });
   });
 
-  describe("toArray()", () => {});
+  describe("toArray()", () => {
+    it("returns an empty array when empty", () => {
+      const subject = new Bag();
+      expect(subject.toArray()).toEqual([]);
+    });
+
+    it("returns one item correctly", () => {
+      const subject = new Bag();
+      subject.insert(insertedValue);
+      expect(subject.toArray()).toEqual([insertedValue]);
+    });
+
+    it("returns multiple occurrences of one item correctly", () => {
+      const subject = new Bag();
+      subject.insert(insertedValue);
+      subject.insert(insertedValue);
+      expect(subject.toArray()).toEqual([insertedValue, insertedValue]);
+    });
+
+    it("returns multiple occurrences of multiple item correctly", () => {
+      const subject = new Bag();
+      subject.insert(insertedValue);
+      subject.insert(insertedValue);
+      subject.insert(otherInsertedValue);
+      subject.insert(otherInsertedValue);
+      subject.insert(otherInsertedValue);
+      const actualValue = subject.toArray();
+      actualValue.sort();
+
+      const expectedValue = [
+        insertedValue,
+        insertedValue,
+        otherInsertedValue,
+        otherInsertedValue,
+        otherInsertedValue,
+      ];
+      expectedValue.sort();
+
+      expect(actualValue).toEqual(expectedValue);
+    });
+  });
 });
