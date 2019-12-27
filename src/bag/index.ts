@@ -22,7 +22,8 @@ export default class Bag<T extends Hashable> {
    *   Further development of this class would involve handling this internally.
    * @memberof Bag
    */
-  constructor(private numBuckets = 100) {
+  constructor(private numBuckets: number = 100) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.hashTable = [...Array(numBuckets)].map(_ => new Bucket());
     this.numElements = 0;
   }
@@ -33,7 +34,7 @@ export default class Bag<T extends Hashable> {
    * @param {T} value
    * @memberof Bag
    */
-  public insert(value: T) {
+  public insert(value: T): void {
     ++this.numElements;
     const bucketContents = this.bucketCorrespondingToValue(value);
     bucketContents.insert(value);
@@ -128,7 +129,7 @@ export default class Bag<T extends Hashable> {
         }
       });
       return result;
-    }, <Array<T>>[]);
+    }, [] as Array<T>);
   }
 
   /**

@@ -48,7 +48,7 @@ export default class Bucket<T> {
    */
   public forEach(
     fn: (value: BagEntry<T>, index: number, array: BagEntry<T>[]) => void,
-  ) {
+  ): void {
     this.contents.forEach(fn);
   }
 
@@ -58,7 +58,7 @@ export default class Bucket<T> {
    * @param {T} value The value to insert.
    * @memberof Bucket
    */
-  public insert(value: T) {
+  public insert(value: T): void {
     const entryIndex = this.contents.findIndex(entry => entry.isEqual(value));
     entryIndex !== -1
       ? this.contents[entryIndex].increment()

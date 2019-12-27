@@ -1,8 +1,5 @@
 /**
  * Represents an entry in a Bag, exposing simple setter and getter methods.
- *
- * @class SetEntry
- * @template T
  */
 export default class BagEntry<T> {
   private myCount: number;
@@ -10,7 +7,7 @@ export default class BagEntry<T> {
   /**
    *Creates an instance of BagEntry.
    *
-   * @param {T} value
+   * @param value - The value for this BagEntry.
    * @memberof BagEntry
    */
   constructor(private value: T) {
@@ -22,7 +19,7 @@ export default class BagEntry<T> {
    *
    * @memberof BagEntry
    */
-  public increment() {
+  public increment(): void {
     ++this.myCount;
   }
 
@@ -32,7 +29,7 @@ export default class BagEntry<T> {
    *
    * @memberof BagEntry
    */
-  public decrement() {
+  public decrement(): void {
     if (this.myCount === 0) throw Error("Cannot decrement below zero");
     --this.myCount;
   }
