@@ -3,24 +3,55 @@ import BagEntry from "./BagEntry";
 import Hashable from "../Hashable";
 import Bucket from "./Bucket";
 
+class HashTable<T extends Hashable> {
+  private hashTable: Array<Bucket<T>>;
+
+  /**
+   * Create an instance of HashTable.
+   *
+   * @param numBuckets - The number of buckets for the Set.
+   */
+  constructor(private numBuckets = 100) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    this.hashTable = [...Array(numBuckets)].map(_ => new Bucket());
+  }
+
+  public bucketCorrespondingToValue(value: T): Bucket<T> {
+    return this.hashTable[this.computeBucket(value)];
+  }
+
+  /**
+   * Determine what bucket—meaning the index of `hashTable`—the `value` belongs
+   * in. This is the result of taking the hashcode for `value` and determining
+   * proprotionately how far between the minimum and maximum `hashCode` values
+   * that `value` falls, then finding what integer that falls into from zero to
+   * `numBuckets`.
+   *
+   * @param value - The value to determine the bucket for.
+   * @returns The bucket number, meaning the index for `hashTable`.
+   */
+  private computeBucket(value: T): number {
+    const sizeOfRange = value.maximumHashValue - value.minimumHashValue;
+    const distanceFromFloor =
+      (value.hashCode() - value.minimumHashValue) / sizeOfRange;
+    return Math.floor(distanceFromFloor * this.numBuckets);
+  }
+}
+
 /**
  * Represents a bag, also known as a multiset. Insertion order is not
  * preserved. All operations are best case `O(1)`, worst case `O(n)`, except
  * `length()`, which is always `O(1)`, and `toArray()`, which is `O(n)`.
  */
 export default class Bag<T extends Hashable> {
+  private hashTable: HashTable<T>;
   private numElements: number;
-  private hashTable: Array<Bucket<T>>;
 
   /**
-   * Creates an instance of Bag.
-   *
-   * @param numBuckets - The number of buckets for the Set.
-   *   Further development of this class would involve handling this internally.
+   * Create an instance of Bag.
    */
-  constructor(private numBuckets: number = 100) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    this.hashTable = [...Array(numBuckets)].map(_ => new Bucket());
+  constructor() {
+    this.hashTable = new HashTable<T>();
     this.numElements = 0;
   }
 
@@ -31,7 +62,7 @@ export default class Bag<T extends Hashable> {
    */
   public insert(value: T): void {
     ++this.numElements;
-    const bucketContents = this.bucketCorrespondingToValue(value);
+    const bucketContents = this.hashTable.bucketCorrespondingToValue(value);
     bucketContents.insert(value);
   }
 
@@ -43,7 +74,7 @@ export default class Bag<T extends Hashable> {
    * @returns - Whether the value is present.
    */
   public contains(value: T): boolean {
-    const bucketContents = this.bucketCorrespondingToValue(value);
+    const bucketContents = this.hashTable.bucketCorrespondingToValue(value);
     return bucketContents.contains(value);
   }
 
@@ -57,7 +88,7 @@ export default class Bag<T extends Hashable> {
    * @returns Whether the value was found and removed.
    */
   public delete(value: T): boolean {
-    const bucketContents = this.bucketCorrespondingToValue(value);
+    const bucketContents = this.hashTable.bucketCorrespondingToValue(value);
     if (bucketContents.delete(value)) {
       --this.numElements;
       return true;
@@ -75,7 +106,7 @@ export default class Bag<T extends Hashable> {
    * @returns Whether the value was found and removed.
    */
   public deleteAll(value: T): boolean {
-    const bucketContents = this.bucketCorrespondingToValue(value);
+    const bucketContents = this.hashTable.bucketCorrespondingToValue(value);
     const howManyOccurrences: number = bucketContents.deleteAll(value);
 
     if (howManyOccurrences === 0) {
@@ -93,7 +124,7 @@ export default class Bag<T extends Hashable> {
    * @returns How many times `value` occurs in the Bag.
    */
   public count(value: T): number {
-    return this.bucketCorrespondingToValue(value).count(value);
+    return this.hashTable.bucketCorrespondingToValue(value).count(value);
   }
 
   /**
@@ -122,23 +153,6 @@ export default class Bag<T extends Hashable> {
   }
 
   /**
-   * Determine what bucket—meaning the index of `hashTable`—the `value` belongs
-   * in. This is the result of taking the hashcode for `value` and determining
-   * proprotionately how far between the minimum and maximum `hashCode` values
-   * that `value` falls, then finding what integer that falls into from zero to
-   * `numBuckets`.
-   *
-   * @param value - The value to determine the bucket for.
-   * @returns The bucket number, meaning the index for `hashTable`.
-   */
-  private computeBucket(value: T): number {
-    const sizeOfRange = value.maximumHashValue - value.minimumHashValue;
-    const distanceFromFloor =
-      (value.hashCode() - value.minimumHashValue) / sizeOfRange;
-    return Math.floor(distanceFromFloor * this.numBuckets);
-  }
-
-  /**
    * Given the contents of a bucket, which is an array of `BagEntry`, figure
    * out what the index for that value is. If `value` isn't present, return
    * `null`.
@@ -157,9 +171,5 @@ export default class Bag<T extends Hashable> {
       entry.isEqual(value),
     );
     return indexOrNegative1 === -1 ? null : indexOrNegative1;
-  }
-
-  private bucketCorrespondingToValue(value: T): Bucket<T> {
-    return this.hashTable[this.computeBucket(value)];
   }
 }
