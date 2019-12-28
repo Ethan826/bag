@@ -7,9 +7,6 @@ import Bucket from "./Bucket";
  * Represents a bag, also known as a multiset. Insertion order is not
  * preserved. All operations are best case `O(1)`, worst case `O(n)`, except
  * `length()`, which is always `O(1)`, and `toArray()`, which is `O(n)`.
- *
- * @class Bag
- * @template T
  */
 export default class Bag<T extends Hashable> {
   private numElements: number;
@@ -18,9 +15,8 @@ export default class Bag<T extends Hashable> {
   /**
    * Creates an instance of Bag.
    *
-   * @param {number} [numBuckets=100] The number of buckets for the Set.
+   * @param numBuckets - The number of buckets for the Set.
    *   Further development of this class would involve handling this internally.
-   * @memberof Bag
    */
   constructor(private numBuckets: number = 100) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -31,8 +27,7 @@ export default class Bag<T extends Hashable> {
   /**
    * Insert a value into the bag.
    *
-   * @param {T} value
-   * @memberof Bag
+   * @param value - The value to insert into the Bucket.
    */
   public insert(value: T): void {
     ++this.numElements;
@@ -44,9 +39,8 @@ export default class Bag<T extends Hashable> {
    * Given a value, determine if the Bag contains at least one occurrence of
    * that value.
    *
-   * @param {T} value The value to search the Bag for.
-   * @returns {boolean} Whether the value is present.
-   * @memberof Bag
+   * @param value - The value to search the Bag for.
+   * @returns - Whether the value is present.
    */
   public contains(value: T): boolean {
     const bucketContents = this.bucketCorrespondingToValue(value);
@@ -59,9 +53,8 @@ export default class Bag<T extends Hashable> {
    * are multiple occurrences of the value, delete only one—use `deleteAll()`
    * to remove all values.
    *
-   * @param {T} value The value to remove.
-   * @returns {boolean} Whether the value was found and removed.
-   * @memberof Bag
+   * @param value - The value to remove.
+   * @returns Whether the value was found and removed.
    */
   public delete(value: T): boolean {
     const bucketContents = this.bucketCorrespondingToValue(value);
@@ -78,9 +71,8 @@ export default class Bag<T extends Hashable> {
    * whether the value was removed (i.e., the value was initially present). To
    * remove only one occurrence of the value from the Bag, use `delete()`.
    *
-   * @param {T} value The value to remove.
-   * @returns {boolean} Whether the value was found and removed.
-   * @memberof Bag
+   * @param value - The value to remove.
+   * @returns Whether the value was found and removed.
    */
   public deleteAll(value: T): boolean {
     const bucketContents = this.bucketCorrespondingToValue(value);
@@ -97,9 +89,8 @@ export default class Bag<T extends Hashable> {
   /**
    * Count the number of occurrences of `value`.
    *
-   * @param {T} value The value to count occurrences of.
-   * @returns {number} How many times `value` occurs in the Bag.
-   * @memberof Bag
+   * @param value - The value to count occurrences of.
+   * @returns How many times `value` occurs in the Bag.
    */
   public count(value: T): number {
     return this.bucketCorrespondingToValue(value).count(value);
@@ -108,8 +99,7 @@ export default class Bag<T extends Hashable> {
   /**
    * How many total elements, including repeats, are in the Bag.
    *
-   * @returns {number} The number of elements.
-   * @memberof Bag
+   * @returns The number of elements.
    */
   public length(): number {
     return this.numElements;
@@ -118,8 +108,7 @@ export default class Bag<T extends Hashable> {
   /**
    * Create an array that is equivalent to the Bag in arbitrary order.
    *
-   * @returns {Array<T>} The array with the Bag's contents.
-   * @memberof Bag
+   * @returns The array with the Bag's contents.
    */
   public toArray(): Array<T> {
     return this.hashTable.reduce((result, bucketContents) => {
@@ -139,10 +128,8 @@ export default class Bag<T extends Hashable> {
    * that `value` falls, then finding what integer that falls into from zero to
    * `numBuckets`.
    *
-   * @private
-   * @param {T} value The value to determine the bucket for.
-   * @returns {number} The bucket number, meaning the index for `hashTable`.
-   * @memberof Bag
+   * @param value - The value to determine the bucket for.
+   * @returns The bucket number, meaning the index for `hashTable`.
    */
   private computeBucket(value: T): number {
     const sizeOfRange = value.maximumHashValue - value.minimumHashValue;
@@ -156,12 +143,9 @@ export default class Bag<T extends Hashable> {
    * out what the index for that value is. If `value` isn't present, return
    * `null`.
    *
-   * @private
-   * @param {T} value The value to search for.
-   * @param {Array<BagEntry<T>>} bucketContents The bucket contents to search.
-   * @returns {(number | null)} The index of the contents, if found, or `null`,
-   *   if not found.
-   * @memberof Bag
+   * @param value - The value to search for.
+   * @param bucketContents - The bucket contents to search.
+   * @returns The index of the contents, if found, or `null`, if not found.
    */
   private findEntryIndex(
     value: T,

@@ -8,7 +8,6 @@ export default class BagEntry<T> {
    *Creates an instance of BagEntry.
    *
    * @param value - The value for this BagEntry.
-   * @memberof BagEntry
    */
   constructor(private value: T) {
     this.myCount = 1;
@@ -16,8 +15,6 @@ export default class BagEntry<T> {
 
   /**
    * Increment the number of entries.
-   *
-   * @memberof BagEntry
    */
   public increment(): void {
     ++this.myCount;
@@ -26,8 +23,6 @@ export default class BagEntry<T> {
   /**
    * Decrement the number of entries. Raises an error if the current value is
    * zero.
-   *
-   * @memberof BagEntry
    */
   public decrement(): void {
     if (this.myCount === 0) throw Error("Cannot decrement below zero");

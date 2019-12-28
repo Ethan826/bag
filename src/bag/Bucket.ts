@@ -4,25 +4,15 @@ import BagEntry from "./BagEntry";
  * Represents a Bucket in a HashTable, meaning the array of values that have
  * the same hashcode. Hopefully this will be small, but that's the concern of
  * the `hashCode` implementation on type `T` that must implement `Hashable`.
- *
- * @export
- * @class Bucket
- * @template T
  */
 export default class Bucket<T> {
   /**
    * The contents of the Bucket.
-   *
-   * @private
-   * @type {Array<BagEntry<T>>}
-   * @memberof Bucket
    */
   private contents: Array<BagEntry<T>>;
 
   /**
    *Creates an instance of Bucket.
-   *
-   * @memberof Bucket
    */
   constructor() {
     this.contents = [];
@@ -31,9 +21,8 @@ export default class Bucket<T> {
   /**
    * Count the number of occurrences of `value`.
    *
-   * @param {T} value The value to count occurrences of.
-   * @returns {number} How many occurrences of `value` there are.
-   * @memberof Bucket
+   * @param value - The value to count occurrences of.
+   * @returns How many occurrences of `value` there are.
    */
   public count(value: T): number {
     const entryIndex = this.contents.findIndex(entry => entry.isEqual(value));
@@ -43,8 +32,7 @@ export default class Bucket<T> {
   /**
    * Call `fn` on each element of the Bucket for side effects.
    *
-   * @param {(value: BagEntry<T>, index: number, array: BagEntry<T>[]) => void} fn
-   * @memberof Bucket
+   * @param fn - The function to apply to each element in the Bucket.
    */
   public forEach(
     fn: (value: BagEntry<T>, index: number, array: BagEntry<T>[]) => void,
@@ -55,8 +43,7 @@ export default class Bucket<T> {
   /**
    * Insert a value into the Bucket.
    *
-   * @param {T} value The value to insert.
-   * @memberof Bucket
+   * @param value - The value to insert.
    */
   public insert(value: T): void {
     const entryIndex = this.contents.findIndex(entry => entry.isEqual(value));
@@ -69,9 +56,8 @@ export default class Bucket<T> {
    * Given a value, determine if the Bucket contains at least one occurrence of
    * that value.
    *
-   * @param {T} value The value to search the Bucket for.
-   * @returns {boolean} Whether the Bucket contains that value.
-   * @memberof Bucket
+   * @param value - The value to search the Bucket for.
+   * @returns Whether the Bucket contains that value.
    */
   public contains(value: T): boolean {
     const entryIndex = this.contents.findIndex(entry => entry.isEqual(value));
@@ -84,9 +70,8 @@ export default class Bucket<T> {
    * there are multiple occurrences of the value, delete only one—use
    * `deleteAll()` to remove all values.
    *
-   * @param {T} value The value to remove.
-   * @returns {boolean} Whether the value was found and removed.
-   * @memberof Bucket
+   * @param value - The value to remove.
+   * @returns Whether the value was found and removed.
    */
   public delete(value: T): boolean {
     const entryIndex = this.contents.findIndex(entry => entry.isEqual(value));
@@ -111,9 +96,8 @@ export default class Bucket<T> {
    * indicates how many copies were deleted. To remove only one occurrence of
    * the value from the Bucket, use `delete()`.
    *
-   * @param {T} value The value to remove.
-   * @returns {boolean} Whether the value was found and removed.
-   * @memberof Bucket
+   * @param value - The value to remove.
+   * @returns Whether the value was found and removed.
    */
   public deleteAll(value: T): number {
     const entryIndex = this.contents.findIndex(entry => entry.isEqual(value));
