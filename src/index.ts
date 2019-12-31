@@ -1,3 +1,3 @@
-import Bag from "./Bag/index";
+import Bag from "./Bag/Bag";
 
 export default Bag;

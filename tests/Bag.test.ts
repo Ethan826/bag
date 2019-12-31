@@ -1,4 +1,4 @@
-import Bag from "../src/Bag/index";
+import Bag from "../src/Bag/Bag";
 
 describe("Bag", () => {
   const insertedValue = "Hello";
@@ -97,12 +97,14 @@ describe("Bag", () => {
     it("correctly counts an arbitrary number", () => {
       const subject = new Bag();
       const repeats = 29;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       [...Array(repeats)].forEach(_ => subject.insert(insertedValue));
       expect(subject.count(insertedValue)).toBe(repeats);
     });
 
     it("does not count other entries", () => {
       const subject = new Bag();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       [...Array(17)].forEach(_ => subject.insert(otherInsertedValue));
       expect(subject.count(insertedValue)).toBe(0);
     });
@@ -117,6 +119,7 @@ describe("Bag", () => {
     it("counts the correct number when only one item exists", () => {
       const subject = new Bag();
       const repeats = 29;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       [...Array(repeats)].forEach(_ => subject.insert(insertedValue));
       expect(subject.length()).toBe(repeats);
     });
@@ -125,9 +128,11 @@ describe("Bag", () => {
       const subject = new Bag();
       const insertedValueRepeats = 29;
       const otherInsertedValueRepeats = 17;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       [...Array(insertedValueRepeats)].forEach(_ =>
         subject.insert(insertedValue),
       );
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       [...Array(otherInsertedValueRepeats)].forEach(_ =>
         subject.insert(otherInsertedValue),
       );
