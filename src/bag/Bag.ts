@@ -1,5 +1,4 @@
 import "../Hashable/String"; // Our extended string
-import BagEntry from "./BagEntry";
 import Hashable from "../Hashable";
 import { HashTable } from "./HashTable";
 
@@ -121,15 +120,4 @@ export default class Bag<T extends Hashable> {
    * @param bucketContents - The bucket contents to search.
    * @returns The index of the contents, if found, or `null`, if not found.
    */
-  private findEntryIndex(
-    value: T,
-    bucketContents: Array<BagEntry<T>>,
-  ): number | null {
-    // For the record, it's unspeakably gross that JavaScript uses -1 as a magic
-    // value to signify an element wasn't found in an array.
-    const indexOrNegative1 = bucketContents.findIndex(entry =>
-      entry.isEqual(value),
-    );
-    return indexOrNegative1 === -1 ? null : indexOrNegative1;
-  }
 }
