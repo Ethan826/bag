@@ -2,22 +2,18 @@ import "../Hashable/String"; // Our extended string
 import Hashable from "../Hashable";
 import { HashTable } from "./HashTable";
 
-// *****************************************************************************
-
 /**
  * Represents a bag, also known as a multiset. Insertion order is not
  * preserved. All operations are best case `O(1)`, worst case `O(n)`, except
  * `length()`, which is always `O(1)`, and `toArray()`, which is `O(n)`.
  */
 export default class Bag<T extends Hashable> {
-  private hashTable: HashTable<T>;
   private numElements: number;
 
   /**
    * Create an instance of Bag.
    */
-  constructor() {
-    this.hashTable = new HashTable<T>();
+  constructor(private hashTable: HashTable<T> = new HashTable()) {
     this.numElements = 0;
   }
 
@@ -110,14 +106,4 @@ export default class Bag<T extends Hashable> {
   public toArray(): Array<T> {
     return this.hashTable.toArray();
   }
-
-  /**
-   * Given the contents of a bucket, which is an array of `BagEntry`, figure
-   * out what the index for that value is. If `value` isn't present, return
-   * `null`.
-   *
-   * @param value - The value to search for.
-   * @param bucketContents - The bucket contents to search.
-   * @returns The index of the contents, if found, or `null`, if not found.
-   */
 }

@@ -30,17 +30,6 @@ export default class Bucket<T> {
   }
 
   /**
-   * Call `fn` on each element of the Bucket for side effects.
-   *
-   * @param fn - The function to apply to each element in the Bucket.
-   */
-  public forEach(
-    fn: (value: BagEntry<T>, index: number, array: BagEntry<T>[]) => void,
-  ): void {
-    this.contents.forEach(fn);
-  }
-
-  /**
    * Insert a value into the Bucket.
    *
    * @param value - The value to insert.
@@ -108,5 +97,19 @@ export default class Bucket<T> {
     } else {
       return 0;
     }
+  }
+
+  /**
+   * Create an array that is equivalent to the Bucket in arbitrary order.
+   *
+   * @returns The array with the Bag's contents.
+   */
+  public toArray(): Array<T> {
+    return this.contents.reduce((result: Array<T>, bagEntry: BagEntry<T>) => {
+      for (let _i = 0; _i < bagEntry.count(); ++_i) {
+        result.push(bagEntry.unwrap());
+      }
+      return result;
+    }, []);
   }
 }

@@ -3,14 +3,17 @@ import Bucket from "./Bucket";
 
 export class HashTable<T extends Hashable> {
   private hashTable: Array<Bucket<T>>;
+
   /**
    * Create an instance of HashTable.
    *
    * @param numBuckets - The number of buckets for the Set.
+   * @param bucketType - The constructor for Bucket. Defaults to `Bucket`; can
+   *   insert alternative Bucket implementation (e.g., for mocking).
    */
-  constructor(private numBuckets = 100) {
+  constructor(private numBuckets = 100, bucketType = Bucket) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    this.hashTable = [...Array(numBuckets)].map(_ => new Bucket());
+    this.hashTable = [...Array(numBuckets)].map(_ => new bucketType());
   }
 
   /**
@@ -30,15 +33,9 @@ export class HashTable<T extends Hashable> {
    * @returns The array with the Bag's contents.
    */
   public toArray(): Array<T> {
-    return this.hashTable.reduce((result, bucketContents) => {
-      bucketContents.forEach(element => {
-        for (let _i = 0; _i < element.count(); ++_i) {
-          result.push(element.unwrap());
-        }
-      });
-      return result;
-    }, [] as Array<T>);
+    return this.hashTable.flatMap((bucket: Bucket<T>) => bucket.toArray());
   }
+
   /**
    * Determine what bucket—meaning the index of `hashTable`—the `value` belongs
    * in. This is the result of taking the hashcode for `value` and determining
